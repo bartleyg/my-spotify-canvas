@@ -1,0 +1,7 @@
+{
+  "env": {
+    "SPOTIFY_CLIENT_ID": "@spotify_client_id",
+    "SPOTIFY_CLIENT_SECRET": "@spotify_client_secret",
+    "SPOTIFY_REFRESH_TOKEN": "@spotify_refresh_token"
+  }
+}

@@ -1,27 +1,35 @@
-# Svelte Example
+# My Spotify Canvas
 
-This directory is a brief example of a [Svelte](https://svelte.dev/) app with [Serverless Functions](https://zeit.co/docs/v2/serverless-functions/introduction) that can be deployed with ZEIT Now and zero configuration.
+[My Spotify Canvas](https://my-spotify-canvas.now.sh) is a dynamically updated audio video canvas of my recently played Spotify music.
 
-## Deploy Your Own
+Built with:
+* Spotify Web API
+* Spotify Canvas API I reverse engineered
+* Protobufs
+* Node.js Express serverless
+* Svelte
+* Zeit Now
 
-Deploy your own Svelte project, along with Serverless Functions, with ZEIT Now.
-
-[![Deploy with ZEIT Now](https://zeit.co/button)](https://zeit.co/import/project?template=https://github.com/zeit/now/tree/master/examples/svelte)
-
-_Live Example: https://svelte.now-examples.now.sh_
-
-### How We Created This Example
-
-To get started with Svelte, along with [Serverless Functions](https://zeit.co/docs/v2/serverless-functions/introduction), deployed with ZEIT Now, you can use [degit](https://github.com/Rich-Harris/degit) to initialize the project:
+Install:
 
 ```shell
-$ npx degit sveltejs/template my-svelte-project
+$ yarn install
 ```
 
-### Deploying From Your Terminal
-
-You can deploy your new Svelte project, along with [Serverless Functions](https://zeit.co/docs/v2/serverless-functions/introduction), with a single command from your terminal using [Now CLI](https://zeit.co/download):
+Local development:
 
 ```shell
-$ now
+$ yarn build && now dev
+```
+
+Deploy staging:
+
+```shell
+$ yarn build && now
+```
+
+Deploy production:
+
+```shell
+$ yarn build && now --prod
 ```
