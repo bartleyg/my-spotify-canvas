@@ -1,15 +1,20 @@
 <script>
-  import { onMount } from 'svelte';
-  import axios from 'axios';
-  import Canvas from './Canvas.svelte';
-  import Spinner from './Spinner.svelte';
-  import Modal from './Modal.svelte';
-  import { playingSoundId, scrollPlayEnabled } from './stores.js';
+  import { onMount } from "svelte";
+  import axios from "axios";
+  import Canvas from "./Canvas.svelte";
+  import Spinner from "./Spinner.svelte";
+  import Modal from "./Modal.svelte";
+  import { scrollPlayEnabled } from "./stores.js";
 
-  let canvasesAvailable, canvases = [];
+  let canvasesAvailable,
+    canvases = [];
   let allAudio = [];
   let loading = true;
-  let mobile, canvasLimitReached, scrollPlayLoopBusy, showModal, audioInitialized = false;
+  let mobile,
+    canvasLimitReached,
+    scrollPlayLoopBusy,
+    showModal,
+    audioInitialized = false;
 
   const MOBILE_WIDTH = 414;
   const NUM_CANVASES_MOBILE = 5;
@@ -21,7 +26,7 @@
 
   onMount(async () => {
     if (mobile) {
-      setInterval(scrollPlayLoop, 20);  // run at 50 Hz
+      setInterval(scrollPlayLoop, 20); // run at 50 Hz
     }
     canvasesAvailable = await getCanvases();
     loading = false;
@@ -35,27 +40,25 @@
     }
 
     allAudio = canvases.map(canvas => new Audio(canvas.previewUrl));
-    console.log('allAudio:', allAudio);
+    console.log("allAudio:", allAudio);
 
-    document.body.addEventListener('touchstart', tapped, false);
-    document.body.addEventListener('click', tapped, false);
-
+    document.body.addEventListener("touchstart", tapped, false);
+    // document.body.addEventListener('click', tapped, false);
   });
 
   function tapped() {
     if (!audioInitialized && allAudio) {
-      console.log('audio init started', new Date());
+      console.log("audio init started", new Date());
       for (let audio of allAudio) {
         audio.play();
         audio.pause();
         audio.currentTime = 0;
       }
       setTimeout(function() {
-        allAudio[0].play()
-      }, 10) // music starts in 10 ms
-      playingSoundId.set(canvases[0].uri);
+        allAudio[0].play();
+      }, 10); // music starts in 10 ms
       audioInitialized = true;
-      console.log('audio init finished', new Date());
+      console.log("audio init finished", new Date());
     }
   }
 
@@ -67,7 +70,7 @@
 
     let bestIndex = -1;
     let bestPixVisible = 0;
-    let canvasDivs = document.querySelectorAll('.canvas');
+    let canvasDivs = document.querySelectorAll(".canvas");
 
     if (window.scrollY > 0) {
       canvasDivs.forEach((div, i) => {
@@ -92,41 +95,43 @@
     if (bestIndex !== -1) {
       let audioElement = allAudio[bestIndex];
       if (audioElement && audioElement.paused) {
-        playSound(audioElement, canvases[bestIndex].uri, bestIndex);
+        playSound(audioElement, bestIndex);
       }
     }
     scrollPlayLoopBusy = false;
   }
 
-  function playSound(audioElement, uri, index) {
-		// first stop other sounds playing
+  function playSound(audioElement, index) {
+    // first stop other sounds playing
     for (let i = 0; i < allAudio.length; i++) {
-      if (i === index) continue
-      allAudio[i].pause()
+      if (i === index) continue;
+      allAudio[i].pause();
     }
-    audioElement.volume = 0.5;	// 50% volume (this may not work)
-		let promise = audioElement.play();
-		if (promise) {
-	    promise.then(_ => {
-        console.log('autoplay started for', index, uri);
-				playingSoundId.set(uri);
-	    }).catch(catchId => {
-				console.log('autoplay prevented for', index, uri, 'catchId:', catchId);
-				showModal = true;
-	    });
-		}
-	}
+    audioElement.volume = 0.5; // 50% volume (this may not work)
+    let promise = audioElement.play();
+    if (promise) {
+      promise
+        .then(_ => {
+          console.log("autoplay started for", index);
+        })
+        .catch(catchId => {
+          console.log("autoplay prevented for", index, "catchId:", catchId);
+          showModal = true;
+        });
+    }
+  }
 
   function getCanvases() {
-    return axios.get('/api/canvases')
+    return axios
+      .get("/api/canvases")
       .then(response => {
         if (response.data.error) {
-          console.log('ERROR /api/canvases:', response.data.error);
+          console.log("ERROR /api/canvases:", response.data.error);
         } else {
           return response.data.canvases;
         }
       })
-      .catch(error => console.log('ERROR /api/canvases:', error));
+      .catch(error => console.log("ERROR /api/canvases:", error));
   }
 
   function loadMore() {
@@ -143,7 +148,7 @@
       canvasesAdded = canvasesAvailable.slice(numDisplayed, maxCanvases);
       canvasLimitReached = true;
     }
-    
+
     // add new audio
     canvasesAdded.map(canvas => allAudio.push(new Audio(canvas.previewUrl)));
     // "initialize" new audio
@@ -164,7 +169,14 @@
   {/if}
   {#if canvases.length > 0}
     {#each canvases as canvas, index}
-      <Canvas {canvas} {index} {mobile} {scrollPlayLoop} on:playblocked="{() => showModal = true}"/>
+      <Canvas
+        {canvas}
+        {index}
+        {mobile}
+        audioElement={allAudio[index]}
+        {playSound}
+        on:playblocked={() => showModal = true}
+      />
     {/each}
     {#if !loading && !canvasLimitReached}
       <button on:click={loadMore} class="button">More</button>
@@ -182,7 +194,6 @@
 </p>
 {#if showModal}
 	<Modal on:close="{() => {
-    console.log('close modal');
     showModal = false
   }}"/>
 {/if}
@@ -192,17 +203,17 @@
     white-space: nowrap;
   }
   .green {
-    color: #4AFF68;
+    color: #4aff68;
   }
   .pink {
-    color: #FB65B2;
+    color: #fb65b2;
   }
   p.yellow {
-    color: #FEFF6E;
+    color: #feff6e;
     margin-bottom: 30px;
   }
   .blue {
-    color: #72FFE4;
+    color: #72ffe4;
   }
   .container {
     display: flex;
@@ -223,8 +234,8 @@
     color: #fff;
     background-color: #1db954;
     border-color: #1aa34a;
-    transition-property: background-color,border-color,color,box-shadow,filter;
-    transition-duration: .3s;
+    transition-property: background-color, border-color, color, box-shadow, filter;
+    transition-duration: 0.3s;
     border-width: 0;
     letter-spacing: 2px;
     min-width: 160px;
