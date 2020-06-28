@@ -36,7 +36,6 @@
 		    loop
 				on:loadeddata={() => videoOnScreen = true}
 				on:canplaythrough={loadNextHandler}
-				on:click={() => audioElement.pause()}
 		  >
 		  </video>
 		{:else}
