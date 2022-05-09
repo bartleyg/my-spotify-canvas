@@ -53,7 +53,7 @@ function getCanvasToken() {
   return axios.get(CANVAS_TOKEN_URL)
     .then(response => {
       if (response.statusText !== 'OK') {
-        console.log(`ERROR ${canvasTokenUrl}: ${response.status} ${response.statusText}`);
+        console.log(`ERROR ${CANVAS_TOKEN_URL}: ${response.status} ${response.statusText}`);
         if (response.data.error) {
           console.log(response.data.error);
         }
@@ -61,7 +61,7 @@ function getCanvasToken() {
         return response.data.accessToken;
       }
     })
-    .catch(error => console.log(`ERROR ${canvasTokenUrl}: ${error}`));
+    .catch(error => console.log(`ERROR ${CANVAS_TOKEN_URL}: ${error}`));
 }
 
 function getPersonalToken() {
@@ -79,7 +79,7 @@ function getPersonalToken() {
   return axios.post(PERSONAL_TOKEN_URL, querystring.stringify(personalTokenForm), personalTokenOpts)
     .then(response => {
       if (response.statusText !== 'OK') {
-        console.log(`ERROR ${personalTokenUrl}: ${response.status} ${response.statusText}`);
+        console.log(`ERROR ${PERSONAL_TOKEN_URL}: ${response.status} ${response.statusText}`);
         if (response.data.error) {
           console.log(response.data.error);
         }
@@ -87,7 +87,7 @@ function getPersonalToken() {
         return response.data.access_token;
       }
     })
-    .catch(error => console.log(`ERROR ${personalTokenUrl}: ${error}`));
+    .catch(error => console.log(`ERROR ${PERSONAL_TOKEN_URL}: ${error}`));
 }
 
 function getRecentlyPlayed(token) {
@@ -100,7 +100,7 @@ function getRecentlyPlayed(token) {
   return axios.get(RECENTLY_PLAYED_URL, recentlyPlayedOpts)
     .then(response => {
       if (response.statusText !== 'OK') {
-        console.log(`ERROR ${recentlyPlayedUrl}: ${response.status} ${response.statusText}`);
+        console.log(`ERROR ${RECENTLY_PLAYED_URL}: ${response.status} ${response.statusText}`);
         if (response.data.error) {
           console.log(response.data.error);
         }
@@ -108,5 +108,5 @@ function getRecentlyPlayed(token) {
         return response.data;
       }
     })
-    .catch(error => console.log(`ERROR ${recentlyPlayedUrl}: ${error}`));
+    .catch(error => console.log(`ERROR ${RECENTLY_PLAYED_URL}: ${error}`));
 }

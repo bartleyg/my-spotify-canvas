@@ -28,7 +28,7 @@ module.exports = function getCanvases(tracks, accessToken) {
   return axios.post(CANVASES_URL, requestBytes, options)
     .then(response => {
       if (response.statusText !== 'OK') {
-        console.log(`ERROR ${canvasesUrl}: ${response.status} ${response.statusText}`);
+        console.log(`ERROR ${CANVASES_URL}: ${response.status} ${response.statusText}`);
         if (response.data.error) {
           console.log(response.data.error);
         }
@@ -36,5 +36,5 @@ module.exports = function getCanvases(tracks, accessToken) {
         return canvas.CanvasResponse.deserializeBinary(response.data).toObject();
       }
     })
-    .catch(error => console.log(`ERROR ${canvasesUrl}: ${error}`));
+    .catch(error => console.log(`ERROR ${CANVASES_URL}: ${error}`));
 }
