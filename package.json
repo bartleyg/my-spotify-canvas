@@ -12,7 +12,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "google-protobuf": "^3.11.4",
     "sirv-cli": "^0.4.4"
   },
